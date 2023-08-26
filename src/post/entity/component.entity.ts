@@ -5,6 +5,7 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
+  JoinColumn,
 } from 'typeorm';
 import { ComponentType } from '../../common/type/component';
 import { Post } from './post.entity';
@@ -18,6 +19,7 @@ export class Component {
 
   @ApiProperty()
   @ManyToOne(() => Post, (post) => post.component, { onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'post_id' })
   post!: Post;
 
   @ApiProperty()

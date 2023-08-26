@@ -2,6 +2,10 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { DatabaseModule } from './database.module';
 import { PostModule } from './post/post.module';
+import { UserModule } from './user/user.module';
+import { HistoryModule } from './history/history.module';
+import { AuthModule } from './auth/auth.module';
+import { JwtMiddlewareModule } from './jwt/jwt-middleware.module';
 
 @Module({
   imports: [
@@ -10,6 +14,10 @@ import { PostModule } from './post/post.module';
       envFilePath: ['.env'],
     }),
     DatabaseModule,
+    JwtMiddlewareModule,
+    AuthModule,
+    UserModule,
+    HistoryModule,
     PostModule,
   ],
 })
