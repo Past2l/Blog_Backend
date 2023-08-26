@@ -1,14 +1,4 @@
-import {
-  Any,
-  ArrayContainedBy,
-  ArrayContains,
-  ArrayOverlap,
-  Between,
-  DeleteResult,
-  In,
-  Like,
-  Repository,
-} from 'typeorm';
+import { Between, DeleteResult, Like, Repository } from 'typeorm';
 import { Post } from './entity/post.entity';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -33,21 +23,17 @@ export class PostService {
     });
   }
 
-  async find({
-    sort,
-    page,
-    count,
-    from,
-    to,
-    title,
-    tag,
-  }: FindPostDto): Promise<Post[]> {
+  async find(
+    { sort, page, count, from, to, title, tag }: FindPostDto,
+    canPrivate: boolean,
+  ): Promise<Post[]> {
     const post: Post[] = [];
     const find = await this.postRepository.find({
       relations: ['component'],
       order: { created: sort },
       where: {
         title: Like(`%${title}%`),
+        ...(!canPrivate && { private: false }),
         created: Between(from, to),
         ...(tag.length > 0 && { tag: Like(`%"${tag.join('"%%"')}"%`) }),
       },
@@ -58,7 +44,12 @@ export class PostService {
     return post;
   }
 
-  async create({ title, component, tag }: CreatePostDto): Promise<Post> {
+  async create({
+    title,
+    component,
+    tag,
+    isPrivate,
+  }: CreatePostDto): Promise<Post> {
     const components: Component[] = [];
     for (const c of component) {
       const data = this.componentRepository.create(c);
@@ -66,6 +57,7 @@ export class PostService {
     }
     const post = this.postRepository.create({
       title,
+      private: isPrivate,
       component: components,
       tag: JSON.stringify(tag),
     });
@@ -74,12 +66,20 @@ export class PostService {
 
   async update(
     id: number,
-    { title, component, editComponent, removeComponent, tag }: UpdatePostDto,
+    {
+      title,
+      isPrivate,
+      component,
+      editComponent,
+      removeComponent,
+      tag,
+    }: UpdatePostDto,
   ): Promise<Post> {
     for (const c of editComponent)
       await this.componentRepository.update(c.id, c);
     for (const id of removeComponent) await this.componentRepository.delete(id);
     const post = await this.get(id);
+    post.private = isPrivate;
     post.title = title;
     post.tag = JSON.stringify(tag);
     for (const c of component) {

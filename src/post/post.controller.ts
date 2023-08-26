@@ -24,9 +24,9 @@ export class PostController {
   constructor(private readonly postService: PostService) {}
 
   @Get(':id')
-  async get(@Param('id') id: number) {
+  async get(@Param('id') id: number, @Req() req) {
     const post = await this.postService.get(!isNaN(id) ? id : 0);
-    if (!post)
+    if (!post || (post.private && !req.user.private))
       throw new HttpException(
         'Post with that ID does not exist.',
         HttpStatus.BAD_REQUEST,
@@ -35,17 +35,27 @@ export class PostController {
   }
 
   @Get('')
-  async find(@Query() data: FindPostDto) {
-    return this.postService.find(data);
+  async find(@Query() data: FindPostDto, @Req() req) {
+    return this.postService.find(data, (req.user && req.user.private) || false);
   }
 
   @Post('')
-  async create(@Body() data: CreatePostDto) {
+  async create(@Body() data: CreatePostDto, @Req() req) {
+    if (!req.user || !req.user.owner)
+      throw new HttpException(
+        'You do not have permission to create Post.',
+        HttpStatus.UNAUTHORIZED,
+      );
     return this.postService.create(data);
   }
 
   @Delete(':id')
-  async remove(@Param('id') id: number, @Res() res) {
+  async remove(@Param('id') id: number, @Req() req, @Res() res) {
+    if (!req.user || !req.user.owner)
+      throw new HttpException(
+        'You do not have permission to remove Post.',
+        HttpStatus.UNAUTHORIZED,
+      );
     const result = await this.postService.remove(id);
     if (result.affected < 1)
       throw new HttpException(
@@ -56,7 +66,16 @@ export class PostController {
   }
 
   @Patch(':id')
-  async update(@Param('id') id: number, @Body() data: UpdatePostDto) {
+  async update(
+    @Param('id') id: number,
+    @Body() data: UpdatePostDto,
+    @Req() req,
+  ) {
+    if (!req.user || !req.user.owner)
+      throw new HttpException(
+        'You do not have permission to modify Post.',
+        HttpStatus.UNAUTHORIZED,
+      );
     if (!(await this.postService.get(id)))
       throw new HttpException(
         'Post with that ID does not exist.',

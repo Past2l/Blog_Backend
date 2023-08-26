@@ -2,8 +2,6 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  JoinTable,
-  ManyToMany,
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -20,6 +18,10 @@ export class Post {
   @ApiProperty()
   @Column({ nullable: false })
   title!: string;
+
+  @ApiProperty()
+  @Column({ nullable: false })
+  private!: boolean;
 
   @ApiProperty()
   @OneToMany(() => Component, (component) => component.post, { cascade: true })

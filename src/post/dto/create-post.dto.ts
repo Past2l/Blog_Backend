@@ -1,4 +1,10 @@
-import { ArrayMinSize, IsArray, IsString } from 'class-validator';
+import {
+  ArrayMinSize,
+  IsArray,
+  IsBoolean,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 import { CreateComponentDto } from './create-component.dto';
 import { ApiProperty } from '@nestjs/swagger';
 
@@ -6,6 +12,11 @@ export class CreatePostDto {
   @ApiProperty()
   @IsString()
   title!: string;
+
+  @ApiProperty()
+  @IsOptional()
+  @IsBoolean()
+  isPrivate: boolean = false;
 
   @ApiProperty()
   @IsArray()
