@@ -23,9 +23,9 @@ import { ApiTags } from '@nestjs/swagger';
 export class PostController {
   constructor(private readonly postService: PostService) {}
 
-  @Get('ip')
-  async ip(@Req() req) {
-    return req.headers['X-Real-IP'];
+  @Get('test')
+  async test(@Req() req) {
+    return req.headers;
   }
 
   @Get(':id')
