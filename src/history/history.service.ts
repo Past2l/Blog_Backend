@@ -40,6 +40,7 @@ export class HistoryService {
   }
 
   async create(data: CreateHistoryDto): Promise<History> {
-    return this.historyRepository.create(data);
+    const post = this.historyRepository.create(data);
+    return this.historyRepository.save(post);
   }
 }
