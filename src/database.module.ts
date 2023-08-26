@@ -6,6 +6,7 @@ import { ConfigService } from '@nestjs/config';
   imports: [
     TypeOrmModule.forRootAsync({
       useFactory: async (config: ConfigService) => ({
+        timezone: config.get<string>('TZ') || 'UTC',
         type: 'mysql',
         host: config.get<string>('DB_HOST'),
         port: config.get<number>('DB_PORT') || 3306,
