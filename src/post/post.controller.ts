@@ -23,11 +23,6 @@ import { ApiTags } from '@nestjs/swagger';
 export class PostController {
   constructor(private readonly postService: PostService) {}
 
-  @Get('test')
-  async test(@Req() req) {
-    return req.headers;
-  }
-
   @Get(':id')
   async get(@Param('id') id: number) {
     const post = await this.postService.get(!isNaN(id) ? id : 0);
