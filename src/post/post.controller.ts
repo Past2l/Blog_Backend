@@ -32,7 +32,13 @@ export class PostController {
   @Get(':id')
   async get(@Param('id') id: number, @Req() req) {
     const post = await this.postService.get(!isNaN(id) ? id : 0);
-    if (!post || (post.private && (!req.user || !req.user.private)))
+    if (
+      !post ||
+      (post.secret &&
+        (!req.user ||
+          (!req.user.owner &&
+            !post.secret_user.find((user) => user.id === req.user.id))))
+    )
       throw new HttpException(
         'Post with that ID does not exist.',
         HttpStatus.BAD_REQUEST,
@@ -65,7 +71,7 @@ export class PostController {
 
   @Get()
   async findLoggedUser(@Query() data: FindPostDto, @Req() req) {
-    return this.postService.find(data, req.user && req.user.private);
+    return this.postService.find(data, req.user?.id, req.user?.owner);
   }
 
   @Post()

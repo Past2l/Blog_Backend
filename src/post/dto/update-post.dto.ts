@@ -1,12 +1,6 @@
 import { ApiProperty, PartialType } from '@nestjs/swagger';
 import { CreatePostDto } from './create-post.dto';
-import {
-  ArrayMinSize,
-  IsArray,
-  IsNumber,
-  IsOptional,
-  IsString,
-} from 'class-validator';
+import { ArrayMinSize, IsArray, IsOptional, IsString } from 'class-validator';
 import { UpdateComponentDto } from './update-component.dto';
 
 export class UpdatePostDto extends PartialType(CreatePostDto) {

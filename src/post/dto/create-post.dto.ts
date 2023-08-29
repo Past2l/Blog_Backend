@@ -16,7 +16,14 @@ export class CreatePostDto {
   @ApiProperty()
   @IsOptional()
   @IsBoolean()
-  isPrivate: boolean = false;
+  secret: boolean = false;
+
+  @ApiProperty()
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  @ArrayMinSize(0)
+  secret_user: string[] = [];
 
   @ApiProperty()
   @IsArray()

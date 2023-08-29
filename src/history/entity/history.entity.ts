@@ -37,5 +37,5 @@ export class History {
 
   @ApiProperty()
   @CreateDateColumn()
-  date: Date;
+  date!: Date;
 }

@@ -30,10 +30,6 @@ export class User {
   owner!: boolean;
 
   @ApiProperty()
-  @Column({ default: false })
-  private!: boolean;
-
-  @ApiProperty()
   @CreateDateColumn()
   created!: Date;
 

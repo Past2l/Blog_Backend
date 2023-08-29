@@ -6,6 +6,8 @@ import { Component } from './entity/component.entity';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { FindPostDto } from './dto/find-post.dto';
+import { UserService } from 'src/user/user.service';
+import { User } from 'src/user/entity/user.entity';
 
 @Injectable()
 export class PostService {
@@ -14,50 +16,66 @@ export class PostService {
     private readonly postRepository: Repository<Post>,
     @InjectRepository(Component)
     private readonly componentRepository: Repository<Component>,
+    private readonly userService: UserService,
   ) {}
 
   async get(id: number): Promise<Post> {
     return this.postRepository.findOne({
       where: { id },
-      relations: ['component'],
+      relations: ['component', 'secret_user'],
     });
   }
 
   async find(
     { sort, page, count, from, to, title, tag }: FindPostDto,
-    canPrivate: boolean,
+    user_id?: string,
+    owner?: string,
   ): Promise<Post[]> {
-    const post: Post[] = [];
-    const find = await this.postRepository.find({
-      relations: ['component'],
+    return await this.postRepository.find({
+      relations: ['component', 'secret_user'],
       order: { created: sort },
-      where: {
-        title: Like(`%${title}%`),
-        ...(!canPrivate && { private: false }),
-        created: Between(from, to),
-        ...(tag.length > 0 && { tag: Like(`%"${tag.join('"%%"')}"%`) }),
-      },
+      where: [
+        {
+          title: Like(`%${title}%`),
+          created: Between(from, to),
+          ...(tag.length > 0 && { tag: Like(`%"${tag.join('"%%"')}"%`) }),
+          ...(!owner && { secret: false }),
+        },
+        !owner && {
+          title: Like(`%${title}%`),
+          created: Between(from, to),
+          ...(tag.length > 0 && { tag: Like(`%"${tag.join('"%%"')}"%`) }),
+          secret: true,
+          secret_user: { id: user_id || '' },
+        },
+      ],
       skip: (page - 1) * count,
       take: count,
     });
-    for (const p of find) post.push(await this.get(p.id));
-    return post;
   }
 
   async create({
     title,
     component,
     tag,
-    isPrivate,
+    secret,
+    secret_user,
   }: CreatePostDto): Promise<Post> {
     const components: Component[] = [];
+    const accesses: User[] = [];
+    if (secret)
+      for (const uid of secret_user) {
+        const user = await this.userService.get(uid);
+        if (user) accesses.push(user);
+      }
     for (const c of component) {
       const data = this.componentRepository.create(c);
       components.push(await this.componentRepository.save(data));
     }
     const post = this.postRepository.create({
       title,
-      private: isPrivate,
+      secret,
+      secret_user: accesses,
       component: components,
       tag: JSON.stringify(tag),
     });
@@ -68,7 +86,8 @@ export class PostService {
     id: number,
     {
       title,
-      isPrivate,
+      secret,
+      secret_user,
       component,
       editComponent,
       removeComponent,
@@ -79,14 +98,22 @@ export class PostService {
       await this.componentRepository.update(c.id, c);
     for (const id of removeComponent) await this.componentRepository.delete(id);
     const post = await this.get(id);
-    post.private = isPrivate;
-    post.title = title;
+    post.secret = secret;
+    post.secret_user = [];
+    if (secret)
+      for (const uid of secret_user) {
+        const user = await this.userService.get(uid);
+        if (user) post.secret_user.push(user);
+      }
+    if (title) post.title = title;
     post.tag = JSON.stringify(tag);
-    for (const c of component) {
-      const data = this.componentRepository.create(c);
-      post.component.push(await this.componentRepository.save(data));
-    }
+    if (component)
+      for (const c of component) {
+        const data = this.componentRepository.create(c);
+        post.component.push(await this.componentRepository.save(data));
+      }
     post.component.sort((a, b) => a.order - b.order);
+    post.updated = new Date();
     return this.postRepository.save(post);
   }
 
