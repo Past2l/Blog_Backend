@@ -1,6 +1,5 @@
-import { IsEnum, IsIP, IsNumber, IsOptional, IsUUID } from 'class-validator';
+import { IsIP, IsIn, IsNumber, IsOptional, IsUUID } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import { Platform } from '../../common/type/platform';
 
 export class CreateHistoryDto {
   @ApiProperty()
@@ -17,6 +16,13 @@ export class CreateHistoryDto {
   user_id?: string;
 
   @ApiProperty()
-  @IsEnum(Platform)
-  platform!: Platform;
+  @IsIn(['android', 'ios', 'ipados', 'windows', 'macos', 'linux', 'other'])
+  platform!:
+    | 'android'
+    | 'ios'
+    | 'ipados'
+    | 'windows'
+    | 'macos'
+    | 'linux'
+    | 'other';
 }

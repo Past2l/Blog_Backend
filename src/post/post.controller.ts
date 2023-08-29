@@ -19,7 +19,6 @@ import { UpdatePostDto } from './dto/update-post.dto';
 import { FindPostDto } from './dto/find-post.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { HistoryService } from '../history/history.service';
-import { CheckPlatform } from '../common/type/platform';
 import { AuthGuard } from '@nestjs/passport';
 
 @ApiTags('Post')
@@ -39,13 +38,27 @@ export class PostController {
         HttpStatus.BAD_REQUEST,
       );
     else {
-      if (req.headers['x-forwarded-for'])
+      if (req.headers['x-forwarded-for']) {
+        const userAgent = req.headers['user-agent'];
         await this.historyService.create({
           ip: req.headers['x-forwarded-for'],
           post_id: id,
           user_id: req.user ? req.user.id : undefined,
-          platform: CheckPlatform(req.headers['user-agent']),
+          platform: userAgent.match(/Android/g)
+            ? 'android'
+            : userAgent.match(/iP(home|od)/g)
+            ? 'ios'
+            : userAgent.match(/iPad/g)
+            ? 'ipados'
+            : userAgent.match(/Windows/g)
+            ? 'windows'
+            : userAgent.match(/Macintosh/g)
+            ? 'macos'
+            : userAgent.match(/Linux/g)
+            ? 'linux'
+            : 'other',
         });
+      }
       return post;
     }
   }

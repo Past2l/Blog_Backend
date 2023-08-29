@@ -1,13 +1,6 @@
 import { FindOptionDto } from '../../common/dto/find-option.dto';
-import {
-  IsEnum,
-  IsNumber,
-  IsOptional,
-  IsString,
-  IsUUID,
-} from 'class-validator';
+import { IsIn, IsNumber, IsOptional, IsString, IsUUID } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import { Platform } from '../../common/type/platform';
 import { Type } from 'class-transformer';
 
 export class FindHistoryDto extends FindOptionDto {
@@ -29,6 +22,13 @@ export class FindHistoryDto extends FindOptionDto {
 
   @ApiProperty()
   @IsOptional()
-  @IsEnum(Platform)
-  platform?: Platform;
+  @IsIn(['android', 'ios', 'ipados', 'windows', 'macos', 'linux', 'other'])
+  platform!:
+    | 'android'
+    | 'ios'
+    | 'ipados'
+    | 'windows'
+    | 'macos'
+    | 'linux'
+    | 'other';
 }
