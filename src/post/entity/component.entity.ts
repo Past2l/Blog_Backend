@@ -7,7 +7,6 @@ import {
   UpdateDateColumn,
   JoinColumn,
 } from 'typeorm';
-import { ComponentType } from '../../common/type/component';
 import { Post } from './post.entity';
 import { ApiProperty } from '@nestjs/swagger';
 
@@ -27,8 +26,16 @@ export class Component {
   order!: number;
 
   @ApiProperty()
-  @Column({ type: 'enum', nullable: false, enum: ComponentType })
-  type!: ComponentType;
+  @Column({ nullable: false })
+  type!:
+    | 'text'
+    | 'image'
+    | 'video'
+    | 'code'
+    | 'link'
+    | 'file'
+    | 'html'
+    | 'markdown';
 
   @ApiProperty()
   @Column({ type: 'longtext', nullable: false })

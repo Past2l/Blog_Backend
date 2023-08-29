@@ -1,5 +1,4 @@
-import { IsEnum, IsNumber, IsString } from 'class-validator';
-import { ComponentType } from '../../common/type/component';
+import { IsIn, IsNumber, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateComponentDto {
@@ -8,8 +7,16 @@ export class CreateComponentDto {
   order!: number;
 
   @ApiProperty()
-  @IsEnum(ComponentType)
-  type!: ComponentType;
+  @IsIn(['text', 'image', 'video', 'code', 'link', 'file', 'html', 'markdown'])
+  type!:
+    | 'text'
+    | 'image'
+    | 'video'
+    | 'code'
+    | 'link'
+    | 'file'
+    | 'html'
+    | 'markdown';
 
   @ApiProperty()
   @IsString()
