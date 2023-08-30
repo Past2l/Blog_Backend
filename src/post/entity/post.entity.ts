@@ -10,7 +10,8 @@ import {
 } from 'typeorm';
 import { Component } from './component.entity';
 import { ApiProperty } from '@nestjs/swagger';
-import { User } from 'src/user/entity/user.entity';
+import { User } from '../../user/entity/user.entity';
+import { Comment } from '../../comment/entity/comment.entity';
 
 @Entity('post')
 export class Post {
@@ -38,6 +39,15 @@ export class Post {
   @ApiProperty()
   @Column({ type: 'longtext', nullable: false })
   tag!: string;
+
+  @ApiProperty()
+  @Column({ default: true })
+  commentEnable?: boolean = true;
+
+  @ApiProperty()
+  @ManyToMany(() => Comment)
+  @JoinTable({ name: 'post_comment' })
+  comment: Comment[];
 
   @ApiProperty()
   @CreateDateColumn()

@@ -60,6 +60,7 @@ export class PostService {
     tag,
     secretEnable,
     secret,
+    commentEnable,
   }: CreatePostDto): Promise<Post> {
     const components: Component[] = [];
     const accesses: User[] = [];
@@ -75,6 +76,7 @@ export class PostService {
     const post = this.postRepository.create({
       title,
       secretEnable,
+      commentEnable,
       secret: accesses,
       component: components,
       tag: JSON.stringify(tag),
@@ -87,6 +89,7 @@ export class PostService {
     {
       title,
       secretEnable,
+      commentEnable,
       secret,
       component,
       editComponent,
@@ -99,6 +102,7 @@ export class PostService {
     for (const id of removeComponent) await this.componentRepository.delete(id);
     const post = await this.get(id);
     post.secretEnable = secretEnable;
+    post.commentEnable = commentEnable;
     post.secret = [];
     if (secretEnable)
       for (const uid of secret) {

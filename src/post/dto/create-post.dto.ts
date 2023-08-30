@@ -26,6 +26,11 @@ export class CreatePostDto {
   secret: string[] = [];
 
   @ApiProperty()
+  @IsOptional()
+  @IsBoolean()
+  commentEnable: boolean = true;
+
+  @ApiProperty()
   @IsArray()
   @ArrayMinSize(0)
   component!: CreateComponentDto[];
