@@ -30,7 +30,6 @@ export class PostService {
     { sort, page, count, from, to, title, tag }: FindPostDto,
     user?: User,
   ): Promise<Post[]> {
-    console.log({ sort, page, count, from, to, title, tag });
     return await this.postRepository.find({
       relations: ['component', 'secret', 'comment'],
       order: { created: sort },
