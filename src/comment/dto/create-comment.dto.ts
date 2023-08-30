@@ -9,12 +9,12 @@ export class CreateCommentDto {
   name: string = '익명';
 
   @ApiProperty()
+  @IsString()
+  content!: string;
+
+  @ApiProperty()
   @IsOptional()
   @IsString()
   @Length(4, 32)
   password?: string;
-
-  @ApiProperty()
-  @IsString()
-  content!: string;
 }

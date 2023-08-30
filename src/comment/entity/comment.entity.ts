@@ -24,7 +24,7 @@ export class Comment {
   user?: User;
 
   @ApiProperty()
-  @Column({ nullable: true, default: '익명' })
+  @Column({ nullable: true })
   name!: string;
 
   @ApiProperty()

@@ -1,4 +1,14 @@
-import { PartialType } from '@nestjs/swagger';
-import { CreateCommentDto } from './create-comment.dto';
+import { ApiProperty } from '@nestjs/swagger';
+import { IsOptional, IsString, Length } from 'class-validator';
 
-export class UpdateCommentDto extends PartialType(CreateCommentDto) {}
+export class UpdateCommentDto {
+  @ApiProperty()
+  @IsString()
+  content!: string;
+
+  @ApiProperty()
+  @IsOptional()
+  @IsString()
+  @Length(4, 32)
+  password?: string;
+}

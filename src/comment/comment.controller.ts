@@ -109,7 +109,6 @@ export class CommentController {
     else
       return this.commentService.update(comment_id, {
         ...data,
-        name: req.user ? req.user.name : data.name,
         password: comment.password,
       });
   }
