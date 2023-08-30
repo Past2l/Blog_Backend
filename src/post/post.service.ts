@@ -6,8 +6,8 @@ import { Component } from './entity/component.entity';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { FindPostDto } from './dto/find-post.dto';
-import { UserService } from 'src/user/user.service';
-import { User } from 'src/user/entity/user.entity';
+import { UserService } from '../user/user.service';
+import { User } from '../user/entity/user.entity';
 
 @Injectable()
 export class PostService {
@@ -22,31 +22,30 @@ export class PostService {
   async get(id: number): Promise<Post> {
     return this.postRepository.findOne({
       where: { id },
-      relations: ['component', 'secret_user'],
+      relations: ['component', 'secret', 'comment', 'comment.user'],
     });
   }
 
   async find(
     { sort, page, count, from, to, title, tag }: FindPostDto,
-    user_id?: string,
-    owner?: string,
+    user?: User,
   ): Promise<Post[]> {
     return await this.postRepository.find({
-      relations: ['component', 'secret_user'],
+      relations: ['component', 'secret', 'comment'],
       order: { created: sort },
       where: [
         {
           title: Like(`%${title}%`),
           created: Between(from, to),
           ...(tag.length > 0 && { tag: Like(`%"${tag.join('"%%"')}"%`) }),
-          ...(!owner && { secretEnable: false }),
+          ...(user?.owner && { secretEnable: false }),
         },
-        !owner && {
+        !user?.owner && {
           title: Like(`%${title}%`),
           created: Between(from, to),
           ...(tag.length > 0 && { tag: Like(`%"${tag.join('"%%"')}"%`) }),
           secretEnable: true,
-          secret: { id: user_id || '' },
+          secret: { id: user?.id || '' },
         },
       ],
       skip: (page - 1) * count,

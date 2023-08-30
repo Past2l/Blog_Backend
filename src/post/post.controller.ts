@@ -71,7 +71,7 @@ export class PostController {
 
   @Get()
   async findLoggedUser(@Query() data: FindPostDto, @Req() req) {
-    return this.postService.find(data, req.user?.id, req.user?.owner);
+    return this.postService.find(data, req.user);
   }
 
   @Post()
