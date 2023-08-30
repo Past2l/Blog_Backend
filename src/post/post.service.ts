@@ -30,6 +30,7 @@ export class PostService {
     { sort, page, count, from, to, title, tag }: FindPostDto,
     user?: User,
   ): Promise<Post[]> {
+    console.log({ sort, page, count, from, to, title, tag });
     return await this.postRepository.find({
       relations: ['component', 'secret', 'comment'],
       order: { created: sort },
@@ -38,9 +39,9 @@ export class PostService {
           title: Like(`%${title}%`),
           created: Between(from, to),
           ...(tag.length > 0 && { tag: Like(`%"${tag.join('"%%"')}"%`) }),
-          ...(user?.owner && { secretEnable: false }),
+          ...(!user?.owner && { secretEnable: false }),
         },
-        !user?.owner && {
+        (!user || !user?.owner) && {
           title: Like(`%${title}%`),
           created: Between(from, to),
           ...(tag.length > 0 && { tag: Like(`%"${tag.join('"%%"')}"%`) }),
