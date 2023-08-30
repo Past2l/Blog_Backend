@@ -28,7 +28,7 @@ export class Comment {
   name!: string;
 
   @ApiProperty()
-  @Column({ nullable: true })
+  @Column({ nullable: true, select: false })
   password?: string;
 
   @ApiProperty()

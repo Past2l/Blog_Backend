@@ -1,11 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsBoolean, IsIP, IsOptional, IsString, Length } from 'class-validator';
+import { IsOptional, IsString, Length } from 'class-validator';
 
 export class CreateCommentDto {
-  @ApiProperty()
-  @IsBoolean()
-  ghest!: boolean;
-
   @ApiProperty()
   @IsOptional()
   @IsString()
@@ -21,8 +17,4 @@ export class CreateCommentDto {
   @ApiProperty()
   @IsString()
   content!: string;
-
-  @ApiProperty()
-  @IsIP()
-  ip!: string;
 }

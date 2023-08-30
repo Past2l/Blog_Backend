@@ -30,7 +30,7 @@ export class CommentController {
 
   @Post(':post_id')
   async create(
-    @Param(':post_id') id: number,
+    @Param('post_id') id: number,
     @Body() data: CreateCommentDto,
     @Req() req,
   ) {
@@ -46,7 +46,7 @@ export class CommentController {
         'Post with that ID does not exist.',
         HttpStatus.BAD_REQUEST,
       );
-    else if (!req?.user && (!data.name || !data.password))
+    else if (!req.user && (!data.name || !data.password))
       throw new HttpException(
         'Name and password are required.',
         HttpStatus.BAD_REQUEST,
@@ -57,20 +57,24 @@ export class CommentController {
         ...(data.password && {
           password: await bcrypt.hash(data.password, 10),
         }),
-        ...(req?.user && {
+        ...(req.user && {
           user: await this.userService.get(req.user.id),
         }),
+        ip: req.headers['x-forwarded-for'] || '127.0.0.1',
+        ghest: !req.user,
+        name: req.user ? req.user.name : data.name,
       });
       post.comment.push(comment);
       await this.postService.save(post);
+      comment.password = undefined;
       return comment;
     }
   }
 
   @Patch(':post_id/:comment_id')
   async update(
-    @Param(':post_id') post_id: number,
-    @Param(':comment_id') comment_id: string,
+    @Param('post_id') post_id: number,
+    @Param('comment_id') comment_id: string,
     @Body() data: UpdateCommentDto,
     @Req() req,
   ) {
@@ -92,23 +96,28 @@ export class CommentController {
         'Comment with that ID does not exist.',
         HttpStatus.BAD_REQUEST,
       );
-    else if (!comment.ghest && req.user.id !== comment.user.id)
+    else if (!comment.ghest && req.user?.id !== comment.user?.id)
       throw new HttpException(
         'You do not have permission to modify Comment.',
         HttpStatus.UNAUTHORIZED,
       );
     else if (
       comment.ghest &&
-      !(await bcrypt.compare(data.password, comment.password))
+      !(await bcrypt.compare(data.password || '', comment.password))
     )
       throw new HttpException('Password is incorrect.', HttpStatus.BAD_REQUEST);
-    else return this.commentService.update(comment_id, data);
+    else
+      return this.commentService.update(comment_id, {
+        ...data,
+        name: req.user ? req.user.name : data.name,
+        password: comment.password,
+      });
   }
 
   @Delete(':post_id/:comment_id')
   async remove(
-    @Param(':post_id') post_id: number,
-    @Param(':comment_id') comment_id: string,
+    @Param('post_id') post_id: number,
+    @Param('comment_id') comment_id: string,
     @Body() data: RemoveCommentDto,
     @Req() req,
     @Res() res,
@@ -138,7 +147,7 @@ export class CommentController {
       );
     else if (
       comment.ghest &&
-      !(await bcrypt.compare(data.password, comment.password))
+      !(await bcrypt.compare(data.password || '', comment.password))
     )
       throw new HttpException('Password is incorrect.', HttpStatus.BAD_REQUEST);
     else {

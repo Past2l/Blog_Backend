@@ -14,10 +14,12 @@ export class CommentService {
   ) {}
 
   async get(id: string): Promise<Comment> {
-    return this.commentRepository.findOne({
-      relations: ['user'],
-      where: { id },
-    });
+    return this.commentRepository
+      .createQueryBuilder('comment')
+      .addSelect(['comment.password'])
+      .leftJoinAndSelect('comment.user', 'user')
+      .where('comment.id = :id', { id })
+      .getOne();
   }
 
   async find({
@@ -42,13 +44,17 @@ export class CommentService {
     });
   }
 
-  async create(data: CreateCommentDto): Promise<Comment> {
+  async create(
+    data: CreateCommentDto & { ip: string; ghest: boolean },
+  ): Promise<Comment> {
     return this.commentRepository.save(data);
   }
 
   async update(id: string, data: UpdateCommentDto): Promise<Comment> {
     await this.commentRepository.update(id, data);
-    return await this.get(id);
+    const comment = await this.get(id);
+    comment.password = undefined;
+    return comment;
   }
 
   async remove(id: string): Promise<DeleteResult> {
