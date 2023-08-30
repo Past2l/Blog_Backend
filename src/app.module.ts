@@ -6,6 +6,7 @@ import { UserModule } from './user/user.module';
 import { HistoryModule } from './history/history.module';
 import { AuthModule } from './auth/auth.module';
 import { JwtMiddlewareModule } from './jwt/jwt-middleware.module';
+import { CommentModule } from './comment/comment.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { JwtMiddlewareModule } from './jwt/jwt-middleware.module';
     UserModule,
     HistoryModule,
     PostModule,
+    CommentModule,
   ],
 })
 export class AppModule {}
