@@ -24,11 +24,11 @@ export class Comment {
   user?: User;
 
   @ApiProperty()
-  @Column({ default: '익명' })
+  @Column({ nullable: true, default: '익명' })
   name!: string;
 
   @ApiProperty()
-  @Column({ default: null })
+  @Column({ nullable: true })
   password?: string;
 
   @ApiProperty()

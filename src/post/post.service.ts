@@ -120,6 +120,11 @@ export class PostService {
     return this.postRepository.save(post);
   }
 
+  async save(post: Post): Promise<Post> {
+    post.updated = new Date();
+    return this.postRepository.save(post);
+  }
+
   async remove(id: number): Promise<DeleteResult> {
     return this.postRepository.delete(id);
   }
