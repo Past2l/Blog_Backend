@@ -4,6 +4,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -19,7 +20,7 @@ export class Comment {
   ghest!: boolean;
 
   @ApiProperty()
-  @Column({ default: null })
+  @ManyToOne(() => User)
   user?: User;
 
   @ApiProperty()
