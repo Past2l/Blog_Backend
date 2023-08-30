@@ -34,10 +34,10 @@ export class PostController {
     const post = await this.postService.get(!isNaN(id) ? id : 0);
     if (
       !post ||
-      (post.secret &&
+      (post.secretEnable &&
         (!req.user ||
           (!req.user.owner &&
-            !post.secret_user.find((user) => user.id === req.user.id))))
+            !post.secret.find((user) => user.id === req.user.id))))
     )
       throw new HttpException(
         'Post with that ID does not exist.',

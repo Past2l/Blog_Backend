@@ -24,12 +24,12 @@ export class Post {
 
   @ApiProperty()
   @Column({ default: false })
-  secret?: boolean = false;
+  secretEnable?: boolean = false;
 
   @ApiProperty()
   @ManyToMany(() => User)
-  @JoinTable({ name: 'post_secret_user' })
-  secret_user?: User[];
+  @JoinTable({ name: 'post_secret' })
+  secret?: User[];
 
   @ApiProperty()
   @OneToMany(() => Component, (component) => component.post, { cascade: true })

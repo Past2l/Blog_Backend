@@ -39,14 +39,14 @@ export class PostService {
           title: Like(`%${title}%`),
           created: Between(from, to),
           ...(tag.length > 0 && { tag: Like(`%"${tag.join('"%%"')}"%`) }),
-          ...(!owner && { secret: false }),
+          ...(!owner && { secretEnable: false }),
         },
         !owner && {
           title: Like(`%${title}%`),
           created: Between(from, to),
           ...(tag.length > 0 && { tag: Like(`%"${tag.join('"%%"')}"%`) }),
-          secret: true,
-          secret_user: { id: user_id || '' },
+          secretEnable: true,
+          secret: { id: user_id || '' },
         },
       ],
       skip: (page - 1) * count,
@@ -58,13 +58,13 @@ export class PostService {
     title,
     component,
     tag,
+    secretEnable,
     secret,
-    secret_user,
   }: CreatePostDto): Promise<Post> {
     const components: Component[] = [];
     const accesses: User[] = [];
-    if (secret)
-      for (const uid of secret_user) {
+    if (secretEnable)
+      for (const uid of secret) {
         const user = await this.userService.get(uid);
         if (user) accesses.push(user);
       }
@@ -74,8 +74,8 @@ export class PostService {
     }
     const post = this.postRepository.create({
       title,
-      secret,
-      secret_user: accesses,
+      secretEnable,
+      secret: accesses,
       component: components,
       tag: JSON.stringify(tag),
     });
@@ -86,8 +86,8 @@ export class PostService {
     id: number,
     {
       title,
+      secretEnable,
       secret,
-      secret_user,
       component,
       editComponent,
       removeComponent,
@@ -98,12 +98,12 @@ export class PostService {
       await this.componentRepository.update(c.id, c);
     for (const id of removeComponent) await this.componentRepository.delete(id);
     const post = await this.get(id);
-    post.secret = secret;
-    post.secret_user = [];
-    if (secret)
-      for (const uid of secret_user) {
+    post.secretEnable = secretEnable;
+    post.secret = [];
+    if (secretEnable)
+      for (const uid of secret) {
         const user = await this.userService.get(uid);
-        if (user) post.secret_user.push(user);
+        if (user) post.secret.push(user);
       }
     if (title) post.title = title;
     post.tag = JSON.stringify(tag);
