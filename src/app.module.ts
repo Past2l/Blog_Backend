@@ -7,6 +7,7 @@ import { HistoryModule } from './history/history.module';
 import { AuthModule } from './auth/auth.module';
 import { JwtMiddlewareModule } from './jwt/jwt-middleware.module';
 import { CommentModule } from './comment/comment.module';
+import { ThemeModule } from './theme/theme.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { CommentModule } from './comment/comment.module';
     HistoryModule,
     PostModule,
     CommentModule,
+    ThemeModule,
   ],
 })
 export class AppModule {}
