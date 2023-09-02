@@ -19,7 +19,7 @@ const defaultTheme = {
   dark: {
     name: 'dark',
     background: '#000000',
-    input_background: '#8B8B8B',
+    input_background: '#202020',
     highlight_background: '#308030',
     text: '#ffffff',
     hightligth_text: '#308030',
