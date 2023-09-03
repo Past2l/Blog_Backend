@@ -18,8 +18,8 @@ const defaultTheme = {
   },
   dark: {
     name: 'dark',
-    background: '#000000',
-    input_background: '#202020',
+    background: '#02040a',
+    input_background: '#0d1116',
     highlight_background: '#308030',
     text: '#ffffff',
     hightligth_text: '#308030',
