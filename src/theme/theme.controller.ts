@@ -18,6 +18,11 @@ import { UpdateThemeDto } from './dto/update-theme.dto';
 export class ThemeController {
   constructor(private readonly themeService: ThemeService) {}
 
+  @Get()
+  async list() {
+    return this.themeService.list();
+  }
+
   @Get(':name')
   async get(@Param('name') name: string) {
     return this.themeService.get(name == 'dark' ? 'dark' : 'light');

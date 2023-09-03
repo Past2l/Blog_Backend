@@ -36,6 +36,10 @@ export class ThemeService {
     private readonly themeRepository: Repository<Theme>,
   ) {}
 
+  async list(): Promise<Theme[]> {
+    return this.themeRepository.find();
+  }
+
   async get(name: 'light' | 'dark'): Promise<Theme> {
     const theme = await this.themeRepository.findOneBy({ name });
     return theme || this.themeRepository.save(defaultTheme[name]);
