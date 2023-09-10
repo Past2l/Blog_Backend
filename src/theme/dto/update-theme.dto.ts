@@ -3,29 +3,41 @@ import { IsHexColor, IsOptional, IsString } from 'class-validator';
 export class UpdateThemeDto {
   @IsOptional()
   @IsHexColor()
-  background?: string;
+  bg1?: string;
 
   @IsOptional()
   @IsHexColor()
-  input_background?: string;
+  bg2?: string;
 
   @IsOptional()
   @IsHexColor()
-  highlight_background?: string;
+  bg3?: string;
 
   @IsOptional()
   @IsHexColor()
-  text?: string;
+  bg_tag?: string;
 
   @IsOptional()
   @IsHexColor()
-  hightligth_text?: string;
+  text1?: string;
+
+  @IsOptional()
+  @IsHexColor()
+  text2?: string;
 
   @IsOptional()
   @IsString()
-  svg?: string;
+  icon1?: string;
 
   @IsOptional()
   @IsString()
-  highligth_svg?: string;
+  icon2?: string;
+
+  @IsOptional()
+  @IsHexColor()
+  hg_text: string;
+
+  @IsOptional()
+  @IsString()
+  hg_icon?: string;
 }

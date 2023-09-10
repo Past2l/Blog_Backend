@@ -9,29 +9,41 @@ export class Theme {
 
   @ApiProperty()
   @Column({ nullable: false })
-  background!: string;
+  bg1!: string;
 
   @ApiProperty()
   @Column({ nullable: false })
-  input_background!: string;
+  bg2!: string;
 
   @ApiProperty()
   @Column({ nullable: false })
-  highlight_background!: string;
+  bg3!: string;
 
   @ApiProperty()
   @Column({ nullable: false })
-  text!: string;
+  bg_tag!: string;
 
   @ApiProperty()
   @Column({ nullable: false })
-  hightligth_text!: string;
+  text1!: string;
 
   @ApiProperty()
   @Column({ nullable: false })
-  svg!: string;
+  text2!: string;
 
   @ApiProperty()
   @Column({ nullable: false })
-  highligth_svg!: string;
+  icon1!: string;
+
+  @ApiProperty()
+  @Column({ nullable: false })
+  icon2!: string;
+
+  @ApiProperty()
+  @Column({ nullable: false })
+  hg_text!: string;
+
+  @ApiProperty()
+  @Column({ nullable: false })
+  hg_icon!: string;
 }
