@@ -7,25 +7,35 @@ import { UpdateThemeDto } from './dto/update-theme.dto';
 const defaultTheme = {
   light: {
     name: 'light',
-    background: '#ffffff',
-    input_background: '#ffffff',
-    highlight_background: '#80FF80',
-    text: '#000000',
-    hightligth_text: '#80FF80',
-    svg: 'invert(0%) sepia(1%) saturate(7472%) hue-rotate(63deg) brightness(114%) contrast(99%)',
-    highligth_svg:
-      'invert(99%) sepia(43%) saturate(1981%) hue-rotate(49deg) brightness(96%) contrast(111%)',
+    bg1: '#F9F9F9',
+    bg2: '#FCFCFC',
+    bg3: '#FFFFFF',
+    bg_tag: '#EEEEEE',
+    text1: '#000000',
+    text2: '#868E96',
+    icon1:
+      'invert(0%) sepia(0%) saturate(0%) hue-rotate(324deg) brightness(96%) contrast(104%)',
+    icon2:
+      'invert(59%) sepia(3%) saturate(881%) hue-rotate(169deg) brightness(94%) contrast(88%)',
+    hg_text: '#1EC31E',
+    hg_icon:
+      'invert(41%) sepia(89%) saturate(787%) hue-rotate(81deg) brightness(116%) contrast(90%)',
   },
   dark: {
     name: 'dark',
-    background: '#02040a',
-    input_background: '#0d1116',
-    highlight_background: '#308030',
-    text: '#ffffff',
-    hightligth_text: '#308030',
-    svg: 'invert(100%) sepia(8%) saturate(7058%) hue-rotate(189deg) brightness(106%) contrast(114%)',
-    highligth_svg:
-      'invert(40%) sepia(9%) saturate(3740%) hue-rotate(71deg) brightness(95%) contrast(78%)',
+    bg1: '#02040A',
+    bg2: '#070710',
+    bg3: '#0D1116',
+    bg_tag: '#202020',
+    text1: '#FFFFFF',
+    text2: '#ACACAC',
+    icon1:
+      'invert(100%) sepia(80%) saturate(0%) hue-rotate(277deg) brightness(109%) contrast(101%)',
+    icon2:
+      'invert(70%) sepia(9%) saturate(0%) hue-rotate(258deg) brightness(98%) contrast(88%)',
+    hg_text: '#78E667',
+    hg_icon:
+      'invert(86%) sepia(24%) saturate(1015%) hue-rotate(54deg) brightness(92%) contrast(95%)',
   },
 };
 
